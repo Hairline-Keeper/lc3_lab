@@ -1,0 +1,425 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="4. LC3数据通路的设计与验证" href="lab4.html" /><link rel="prev" title="2. 组合电路设计" href="lab2.html" />
+
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>3. LC3控制器的设计 - lc3_lab documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">lc3_lab  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">lc3_lab  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lab1.html">1. 环境搭建</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">2. 组合电路设计</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">3. LC3控制器的设计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab4.html">4. LC3数据通路的设计与验证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab5.html">5. LC3的启动与仿真</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab6.html">6. LC3-FPGA上板运行</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="lc3">
+<h1><span class="section-number">3. </span>LC3控制器的设计<a class="headerlink" href="#lc3" title="Permalink to this headline">¶</a></h1>
+<section id="id1">
+<h2><span class="section-number">3.1. </span>实验目的<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>熟悉LC3微结构，具体请仔细阅读 <strong>《计算机系统概论》 附录C</strong> 。</p></li>
+<li><p>了解LC3中controller原理并使用chisel语言进行设计和验证。</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2><span class="section-number">3.2. </span>实验设备<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Ubuntu操作系统的电脑一台，或装有Ubuntu操作系统的虚拟机</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2><span class="section-number">3.3. </span>实验任务<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>仔细阅读 <strong>《计算机系统概论》 附录C</strong></p></li>
+<li><p>根据状态转移图，编写控制器中的状态机</p></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>《计算机系统概论》 附录C中的内容为LC3内部架构的细节和规范，相当于设计的蓝图，熟悉内部架构对后续实验有极大帮助。</p>
+</div>
+</section>
+<section id="id4">
+<h2><span class="section-number">3.4. </span>实验内容<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="admonition caution">
+<p class="admonition-title">Caution</p>
+<p>实验开始前假设你已经阅读过一遍《计算机系统概论》 附录C，否则建议先阅读。</p>
+</div>
+<section id="controller">
+<h3><span class="section-number">3.4.1. </span>Controller的设计<a class="headerlink" href="#controller" title="Permalink to this headline">¶</a></h3>
+<p>Controller 是计算机中最为核心的一个部件，控制着机器的运行行为。
+在LC3中，Controller的功能为接收上一周期的运算结果，根据上周期的状态生成本周期的状态，最后根据生成的状态查表得到控制信号（微指令），并传送给数据通路和存储器，让其做出对应的工作。原理如图所示：</p>
+<figure class="align-center" id="id6">
+<img alt="controller" src="_images/controller.png"/>
+<figcaption>
+<p><span class="caption-text">fig3-1: controller结构图</span><a class="headerlink" href="#id6" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>其中状态转换以及状态编号在《计算机系统概论》p369 和 p377。而控制信号（微指令）在p371-372。每一个状态对应一个控制信号列表，可视为一个二维数组，该二位数组即微指令表。</p>
+<p><strong>控制信号</strong>：信号长度为49bits，微指令表的容量则为状态数*49bits各信号含义如下:</p>
+<div class="table-wrapper"><table class="docutils align-default">
+<colgroup>
+<col style="width: 10%"/>
+<col style="width: 90%"/>
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>信号名称</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>LD.*</p></td>
+<td><p>该信号为1的时候,寄存器 * 的值才能被改变。</p></td>
+</tr>
+<tr class="row-odd"><td><p>Gate*</p></td>
+<td><p>该信号为1的时候，寄存器 * 才能在在总线上传输（通常通过总线传到另一个寄存器）。由于总线只能传输一个信号，所有Gate *同时只能有一个信号为1。</p></td>
+</tr>
+<tr class="row-even"><td><p>*Mux</p></td>
+<td><p>数据选择时的选择信号</p></td>
+</tr>
+<tr class="row-odd"><td><p>ALUK</p></td>
+<td><p>ALU的操作类型</p></td>
+</tr>
+<tr class="row-even"><td><p>MIO.EN</p></td>
+<td><p>是否要读写内存</p></td>
+</tr>
+<tr class="row-odd"><td><p>R.W</p></td>
+<td><p>内存操作读还是写</p></td>
+</tr>
+</tbody>
+</table></div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>举例：</p>
+<ol class="arabic simple">
+<li><p>在状态机号35时，操作为IR&lt;-MDR，因此LD.IR和GateMDR都为1</p></li>
+<li><p>ADDR1MUX为0选择PC，为1时选择BaseR</p></li>
+</ol>
+</div>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<blockquote>
+<div><p><strong>Task1</strong> (src/main/scala/LC3/controller.scala):根据《计算机系统概论》p369 和 p377列出所有的状态转移。根据当周期的状态在微指令表中索引出控制信号。</p>
+</div></blockquote>
+</section>
+<section id="id5">
+<h3><span class="section-number">3.4.2. </span>观察Controller结果<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>建立单元测试可以在不运行整个LC3情况下独立运行Controller。
+1. 通过模块端口把状态机设置城运行状态。
+2. 通过模块输入状态机转移的条件。
+3. 观察状态机转移结果</p>
+<p>我们以add指令在LC3的状态为例，状态转移顺序为 18, 33, 35, 32, 1 最后转移回到18。</p>
+<figure class="align-center" id="id7">
+<img alt="state" src="_images/state.png"/>
+<figcaption>
+<p><span class="caption-text">fig3-1: LC3状态机</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>测试代码如下：</p>
+<div class="highlight-scala notranslate"><div class="highlight"><pre><span></span><span class="c1">// src/test/scala/ControllerTest.scala</span>
+
+<span class="k">class</span> <span class="nc">ControllerTest</span> <span class="k">extends</span> <span class="nc">AnyFlatSpecwith</span> <span class="nc">ChiselScalatestTester</span>  <span class="c1">// chiseltest 类和依赖</span>
+<span class="p">{</span>
+    <span class="n">behavior</span> <span class="n">of</span> <span class="s">"Controller"</span>
+
+    <span class="n">it</span> <span class="n">should</span> <span class="s">"test state machine"</span> <span class="n">in</span> <span class="p">{</span>   <span class="c1">//测试用例</span>
+        <span class="n">test</span><span class="p">(</span><span class="k">new</span> <span class="nc">Controller</span><span class="p">)</span> <span class="p">{</span> <span class="n">c</span> <span class="o">=&gt;</span>
+
+            <span class="c1">// 初始状态</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">work</span><span class="p">.</span><span class="n">poke</span><span class="p">(</span><span class="kc">true</span><span class="p">.</span><span class="nc">B</span><span class="p">)</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">end</span><span class="p">.</span><span class="n">poke</span><span class="p">(</span><span class="kc">false</span><span class="p">.</span><span class="nc">B</span><span class="p">)</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">clock</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s"io.state=</span><span class="si">${</span><span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">peek</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1">// 初始为18</span>
+
+            <span class="c1">// add指令状态转移</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">in</span><span class="p">.</span><span class="n">int</span><span class="p">.</span><span class="n">poke</span><span class="p">(</span><span class="kc">false</span><span class="p">.</span><span class="nc">B</span><span class="p">)</span>                  <span class="c1">// 转移条件：int为0</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">clock</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s"io.state=</span><span class="si">${</span><span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">peek</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1">// 转移为33</span>
+
+            <span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">in</span><span class="p">.</span><span class="n">r</span><span class="p">.</span><span class="n">poke</span><span class="p">(</span><span class="kc">true</span><span class="p">.</span><span class="nc">B</span><span class="p">)</span>                     <span class="c1">// 转移条件：r为1</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">clock</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s"io.state=</span><span class="si">${</span><span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">peek</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1">// 转移为35</span>
+
+            <span class="n">c</span><span class="p">.</span><span class="n">clock</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s"io.state=</span><span class="si">${</span><span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">peek</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1">// 转移为32</span>
+
+            <span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">in</span><span class="p">.</span><span class="n">ir</span><span class="p">.</span><span class="n">poke</span><span class="p">(</span><span class="mi">1</span><span class="p">.</span><span class="nc">U</span><span class="p">)</span>                       <span class="c1">// 转移条件：ir为1</span>
+            <span class="n">c</span><span class="p">.</span><span class="n">clock</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s"io.state=</span><span class="si">${</span><span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">peek</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1">// 转移为1</span>
+
+            <span class="n">c</span><span class="p">.</span><span class="n">clock</span><span class="p">.</span><span class="n">step</span><span class="p">()</span>
+            <span class="n">println</span><span class="p">(</span><span class="s">s"io.state=</span><span class="si">${</span><span class="n">c</span><span class="p">.</span><span class="n">io</span><span class="p">.</span><span class="n">state</span><span class="p">.</span><span class="n">peek</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>    <span class="c1">// 指令结束，转移为18</span>
+
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>执行以下命令观察测试结果</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>mill -i chisel_lc3.test.testOnly -o -s LC3.ControllerTest
+</pre></div>
+</div>
+<figure class="align-center" id="id8">
+<img alt="state" src="_images/controllertest.png"/>
+<figcaption>
+<p><span class="caption-text">fig3-2: 测试结果</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          <a class="next-page" href="lab4.html">
+              <div class="page-info">
+                <div class="context">
+                  <span>Next</span>
+                </div>
+                <div class="title"><span class="section-number">4. </span>LC3数据通路的设计与验证</div>
+              </div>
+              <svg><use href="#svg-arrow-right"></use></svg>
+            </a>
+          <a class="prev-page" href="lab2.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">2. </span>组合电路设计</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, zfw |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/lab3.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">3. LC3控制器的设计</a><ul>
+<li><a class="reference internal" href="#id1">3.1. 实验目的</a></li>
+<li><a class="reference internal" href="#id2">3.2. 实验设备</a></li>
+<li><a class="reference internal" href="#id3">3.3. 实验任务</a></li>
+<li><a class="reference internal" href="#id4">3.4. 实验内容</a><ul>
+<li><a class="reference internal" href="#controller">3.4.1. Controller的设计</a></li>
+<li><a class="reference internal" href="#id5">3.4.2. 观察Controller结果</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>

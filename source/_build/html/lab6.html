@@ -1,0 +1,664 @@
+<!doctype html>
+<html class="no-js">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="prev" title="5. LC3的启动与仿真" href="lab5.html" />
+
+    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
+        <title>6. LC3-FPGA上板运行 - lc3_lab documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  body[data-theme="dark"] {
+    --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+  }
+  @media (prefers-color-scheme: dark) {
+    body:not([data-theme="light"]) {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+  }
+</style></head>
+  <body>
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path stroke="none" d="M0 0h24v24H0z" />
+      <line x1="4" y1="6" x2="20" y2="6" />
+      <line x1="10" y1="12" x2="20" y2="12" />
+      <line x1="6" y1="18" x2="20" y2="18" />
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-half" viewBox="0 0 24 24">
+    <title>Auto light/dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+      <circle cx="12" cy="12" r="9" />
+      <path d="M13 12h5" />
+      <path d="M13 15h4" />
+      <path d="M13 18h1" />
+      <path d="M13 9h4" />
+      <path d="M13 6h1" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="index.html"><div class="brand">lc3_lab  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
+  
+  
+  <span class="sidebar-brand-text">lc3_lab  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
+  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="lab1.html">1. 环境搭建</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab2.html">2. 组合电路设计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab3.html">3. LC3控制器的设计</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab4.html">4. LC3数据通路的设计与验证</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lab5.html">5. LC3的启动与仿真</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">6. LC3-FPGA上板运行</a></li>
+</ul>
+
+</div>
+</div>
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main">
+          <section id="lc3-fpga">
+<h1><span class="section-number">6. </span>LC3-FPGA上板运行<a class="headerlink" href="#lc3-fpga" title="Permalink to this headline">¶</a></h1>
+<section id="id1">
+<h2><span class="section-number">6.1. </span>实验目的<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>学会在vivado上建立项目</p></li>
+<li><p>了解将程序烧入FPGA的流程</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2><span class="section-number">6.2. </span>实验设备<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Ubuntu操作系统的电脑一台，或装有Ubuntu操作系统的虚拟机</p></li>
+<li><p>一块FPGA板，指导中使用的是达芬奇FPGA开发板，上面搭载的主控芯片是Xilinx Artix7系列XC7A35T</p></li>
+<li><p>vivado软件，指导中使用的是v2020.1</p></li>
+</ul>
+</section>
+<section id="id3">
+<h2><span class="section-number">6.3. </span>实验任务<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>准备LC3顶层verilog文件</p></li>
+<li><p>建立LC3的vivado项目</p></li>
+<li><p>将LC3烧录到FPGA上运行</p></li>
+</ul>
+</section>
+<section id="id4">
+<h2><span class="section-number">6.4. </span>实验内容<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<section id="lc3verilog">
+<h3><span class="section-number">6.4.1. </span>准备LC3顶层verilog文件<a class="headerlink" href="#lc3verilog" title="Permalink to this headline">¶</a></h3>
+<p>首先我们需要做的不是建立一个新的vivado项目，而是先生成我们需要的用来烧录FPGA的verilog文件，这个文件跟我们仿真时生成的verilog文件还有些微的不同，具体在Memory.scala文件中。
+我们可以看到三种Memory的定义，而在生成verilog的过程中，具体使用哪种Memory，取决于CoreConfig.FPGAPlatform和CoreConfig.REPLACE_MEM两个变量的值，这两个变量在Top.scala文件中定义。
+接下来介绍这三种Memory不同的适用场景。</p>
+<ol class="arabic simple">
+<li><p>当FPGAPlatform为false时，代表只需要仿真即可，此时会生成RAMHelper模块，这是一个用DPI-C导入的一个C程序，其本质就是C++中的一个数组，根据接口信号读取和写入对应位置的元素。之所以在仿真时要使用C++来仿真ram，是因为我们需要在整个LC3系统运行起来之前，给ram中初始化一些我们需要的程序，比如说一些trap程序，启动程序。虽然这个直接用verilog来编写也可以做到，但是还是用C++来实现更加灵活简单</p></li>
+<li><p>当FPGAPlatform为true时，代表你不需要用于仿真，而是要用于其他的功能，首先当REPLACE_MEM为false时，会生成lut_mem模块，这就是一个用verolog写的最简单的ram，没有ram初始化功能，这样生成的verilog其实是不能正常运行的，虽然它的电路都有，但是因为ram中没有程序，所以电路的行为不确定，这种配置主要是用于给后端做一些布局布线时使用，因为如果像在FPGA上运行的verilog使用了第三方ram的ip，会导致综合出来的ram是空的</p></li>
+<li><p>当FPGAPlatform为true且REPLACE_MEM为true时，代表你需要将生成的verilog代码烧录到FPGA上运行。此时会生成一个dual_mem模块，其实可以看到这是个空模块，内部没有任何的逻辑。其实这个模块是一个FPGA上的第三方ip核，接下来我们会在vivado中引入这个ip核，这样在FPGA综合时，就会使用FPGA上的ram资源，而不是直接使用lut搭建一个ram，直接使用lut搭建ram，我们的FPGA板卡上的lut资源是不够的</p></li>
+</ol>
+</section>
+<section id="lc3vivado">
+<h3><span class="section-number">6.4.2. </span>建立LC3的vivado项目<a class="headerlink" href="#lc3vivado" title="Permalink to this headline">¶</a></h3>
+<p>当然vivado怎么安装就不介绍了，至于你是安装在Ubuntu系统还是Windows系统也无所谓，安装完vivado记得去找个license，这个东西实验课是不是不太好直接给，涉及到一些版权问题？
+在vivado新建一个项目，起一个项目名，比如指导中给项目命名为lc3_fpga</p>
+<figure class="align-center" id="id7">
+<img alt="controller" src="_images/image001.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-1: 新建项目窗口1</span><a class="headerlink" href="#id7" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id8">
+<img alt="controller" src="_images/image003.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-2: 新建项目窗口2</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>建立完项目后，记得将TopMain.v文件放到刚建好的项目路径中，然后在项目中点击Add Sources按钮，将TopMain.v文件添加到项目中</p>
+<figure class="align-center" id="id9">
+<img alt="controller" src="_images/image005.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-3: 添加Source文件1</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id10">
+<img alt="controller" src="_images/image007.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-4: 添加Source文件2</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id11">
+<img alt="controller" src="_images/image009.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-5: 添加Source文件3</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>导入成功后，你可以在vivado的Sources窗口中看到LC3的几个基本模块，但是可以看到在memory中dual_mem是一个没有找到对应模块的状态。接下来就要在vivado中添加对应的ip核。</p>
+<figure class="align-center" id="id12">
+<img alt="controller" src="_images/image011.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-6: 没有找到对应模块的dual_mem</span><a class="headerlink" href="#id12" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>添加ip核，首先点击Flow Navigator窗口中的IP Catalog按钮，在弹出的窗口中搜索Block Memory，选择Block Memory Generator</p>
+<figure class="align-center" id="id13">
+<img alt="controller" src="_images/image013.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-7: IP Catalog按钮位置</span><a class="headerlink" href="#id13" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>按照下图的配置好参数，点击OK按钮，然后弹出的窗口直接点击Generate</p>
+<figure class="align-center" id="id14">
+<img alt="controller" src="_images/image015.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-8: Block Memory Generator位置</span><a class="headerlink" href="#id14" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id15">
+<img alt="controller" src="_images/image017.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-9: dual_mem配置1</span><a class="headerlink" href="#id15" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id16">
+<img alt="controller" src="_images/image019.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-10: dual_mem配置2</span><a class="headerlink" href="#id16" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id17">
+<img alt="controller" src="_images/image021.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-11: dual_mem配置3</span><a class="headerlink" href="#id17" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id18">
+<img alt="controller" src="_images/image023.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-12: dual_mem配置4</span><a class="headerlink" href="#id18" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id19">
+<img alt="controller" src="_images/image025.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-13: 生成dual_mem确认窗口</span><a class="headerlink" href="#id19" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>等待界面右上角把ip核生成完毕，可能会需要较长的时间，请耐心等待</p>
+<figure class="align-center" id="id20">
+<img alt="controller" src="_images/image027.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-14: 生成ip核中</span><a class="headerlink" href="#id20" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id21">
+<img alt="controller" src="_images/image029.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-15: ip核生成完成</span><a class="headerlink" href="#id21" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>编译完成后在Sources窗口下点击切换到IP Sources标签页，可以看到生产的ram，点开dual_mem_stub.v可以看到，我们之前chisel中定义的dual_men接口与生成的ram接口是一致的，与此同时，在Hierachy标签页中，dual_mem的图标已经改变了</p>
+<figure class="align-center" id="id22">
+<img alt="controller" src="_images/image031.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-16: 生成完的ip核相关文件</span><a class="headerlink" href="#id22" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id23">
+<img alt="controller" src="_images/image033.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-17: 生成对应模块后的dual_mem</span><a class="headerlink" href="#id23" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来我们要为vivado项目添加一个约束文件，这一步与添加Source文件类似，只是由选择Add or create design sources变为了Add or create constraints，这个文件主要是用来将LC3的时钟、复位接口和Uart接口与FPGA上对应的引脚连接，注意这里我们并没有将reset按钮映射到FPGA的reset按钮上，而是映射到了KEY0按钮上。因为如果映射到reset按钮上，只有reset按钮一直处于按下的状态，系统才会正常工作。后半部分的功能主要是为了生成的bit流文件转换成固化文件后能够适用于4bit位宽SPI通信的flash器件，代码如下：</p>
+<div class="highlight-perl notranslate"><div class="highlight"><pre><span></span><span class="n">create_clock</span> <span class="o">-</span><span class="n">period</span> <span class="mf">20.000</span> <span class="o">-</span><span class="n">name</span> <span class="n">clk</span> <span class="p">[</span><span class="n">get_ports</span> <span class="n">clock</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="o">-</span><span class="n">dict</span> <span class="p">{</span><span class="n">PACKAGE_PIN</span> <span class="n">R4</span> <span class="n">IOSTANDARD</span> <span class="n">LVCMOS33</span><span class="p">}</span> <span class="p">[</span><span class="n">get_ports</span> <span class="n">clock</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="o">-</span><span class="n">dict</span> <span class="p">{</span><span class="n">PACKAGE_PIN</span> <span class="n">T1</span> <span class="n">IOSTANDARD</span> <span class="n">LVCMOS33</span><span class="p">}</span> <span class="p">[</span><span class="n">get_ports</span> <span class="k">reset</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="o">-</span><span class="n">dict</span> <span class="p">{</span><span class="n">PACKAGE_PIN</span> <span class="n">U5</span> <span class="n">IOSTANDARD</span> <span class="n">LVCMOS33</span><span class="p">}</span> <span class="p">[</span><span class="n">get_ports</span> <span class="n">io_uart_rxd</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="o">-</span><span class="n">dict</span> <span class="p">{</span><span class="n">PACKAGE_PIN</span> <span class="n">T6</span> <span class="n">IOSTANDARD</span> <span class="n">LVCMOS33</span><span class="p">}</span> <span class="p">[</span><span class="n">get_ports</span> <span class="n">io_uart_txd</span><span class="p">]</span>
+
+<span class="n">set_property</span> <span class="n">CFGBVS</span> <span class="n">VCCO</span> <span class="p">[</span><span class="n">current_design</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="n">CONFIG_VOLTAGE</span> <span class="mf">3.3</span> <span class="p">[</span><span class="n">current_design</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="n">BITSTREAM</span><span class="o">.</span><span class="n">GENERAL</span><span class="o">.</span><span class="n">COMPRESS</span> <span class="n">true</span> <span class="p">[</span><span class="n">current_design</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="n">BITSTREAM</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">CONFIGRATE</span> <span class="mi">50</span> <span class="p">[</span><span class="n">current_design</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="n">BITSTREAM</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">SPI_BUSWIDTH</span> <span class="mi">4</span> <span class="p">[</span><span class="n">current_design</span><span class="p">]</span>
+<span class="n">set_property</span> <span class="n">BITSTREAM</span><span class="o">.</span><span class="n">CONFIG</span><span class="o">.</span><span class="n">SPI_FALL_EDGE</span> <span class="n">Yes</span> <span class="p">[</span><span class="n">current_design</span><span class="p">]</span>
+</pre></div>
+</div>
+<figure class="align-center" id="id24">
+<img alt="controller" src="_images/image035.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-18: 添加约束文件1</span><a class="headerlink" href="#id24" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id25">
+<img alt="controller" src="_images/image037.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-19: 添加约束文件2</span><a class="headerlink" href="#id25" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来我们要再在vivado中指定一个顶层，将我们的Top模块再包一层，这个顶层文件只在vivado做仿真时会使用，并不会真正被烧录到FPGA中。
+和之前添加TopMain.v一样，只不过这次我们选择Add or create simulation sources选项</p>
+<figure class="align-center" id="id26">
+<img alt="controller" src="_images/image039.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-20: 添加仿真文件</span><a class="headerlink" href="#id26" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>然后直接点OK，在Sources窗口中找到test.v文件，test.v的参考代码如下</p>
+<div class="highlight-verilog notranslate"><div class="highlight"><pre><span></span><span class="no">`timescale</span><span class="w"> </span><span class="mh">1</span><span class="n">ns</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mh">1</span><span class="n">ps</span><span class="w"></span>
+<span class="k">module</span><span class="w"> </span><span class="n">test</span><span class="p">();</span><span class="w"></span>
+<span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="n">sys_clk</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="kt">reg</span><span class="w"> </span><span class="n">sys_rst_n</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">    </span><span class="kt">wire</span><span class="w"> </span><span class="n">txd</span><span class="p">;</span><span class="w"></span>
+
+<span class="w">     </span><span class="k">initial</span><span class="w"> </span><span class="k">begin</span><span class="w"></span>
+<span class="w">        </span><span class="n">sys_clk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">sys_rst_n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b1</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="p">#</span><span class="mh">100</span><span class="w"></span>
+<span class="w">        </span><span class="n">sys_rst_n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">1</span><span class="mb">'b0</span><span class="p">;</span><span class="w"></span>
+<span class="w">    </span><span class="k">end</span><span class="w"></span>
+
+<span class="w">    </span><span class="k">always</span><span class="w"> </span><span class="p">#</span><span class="mh">10</span><span class="w"> </span><span class="n">sys_clk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">~</span><span class="n">sys_clk</span><span class="p">;</span><span class="w"></span>
+
+
+<span class="w">    </span><span class="n">Top</span><span class="w"> </span><span class="n">top</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="p">.</span><span class="n">clock</span><span class="p">(</span><span class="n">sys_clk</span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="p">.</span><span class="n">reset</span><span class="p">(</span><span class="n">sys_rst_n</span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="p">.</span><span class="n">io_uart_rxd</span><span class="p">(</span><span class="mh">1</span><span class="mb">'b0</span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="p">.</span><span class="n">io_uart_txd</span><span class="p">(</span><span class="n">txd</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+
+<span class="k">endmodule</span><span class="w"></span>
+</pre></div>
+</div>
+<p>然后我们在Sources窗口中大概能看到这样的组织结构</p>
+<figure class="align-center" id="id27">
+<img alt="controller" src="_images/image041.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-21: 所有文件添加完后的项目结构</span><a class="headerlink" href="#id27" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+<section id="id5">
+<h3><span class="section-number">6.4.3. </span>烧录并运行<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>接下来点击Flow Navigator窗口中的Generate Bitstream按钮，综合生成bit文件，弹出的对话框中不用修改配置，Yes，OK即可。这部分过程比较久，请耐心等待，可以看vivado右上角来判断状态，生成完成后会弹出对话框，选择Generate Memory Configuration File，然后点OK，如果一不小心关闭了这个对话框，也可以在菜单栏的Tools菜单中找到</p>
+<figure class="align-center" id="id28">
+<img alt="controller" src="_images/image043.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-22: 生成bit文件按钮</span><a class="headerlink" href="#id28" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id29">
+<img alt="controller" src="_images/image045.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-23: 弹出对话框选择生成mcf文件</span><a class="headerlink" href="#id29" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接着按照下图格式进行配置，点击OK后，看到弹出对话框，表示mcf文件已经生成成功</p>
+<figure class="align-center" id="id30">
+<img alt="controller" src="_images/image047.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-24: 生成mcf文件配置</span><a class="headerlink" href="#id30" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id31">
+<img alt="controller" src="_images/image049.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-25: mcf文件生成成功提示窗口</span><a class="headerlink" href="#id31" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来就要正式开始烧录了，首先我们需要连接好开发板，首先我们需要连接JTAG下载接口，通过这个接口我们将我们的程序烧录到FPGA上自带的Flash中，这样在开机后FPGA就会从Flash中运行我们烧录好的程序。</p>
+<p>其次一个系统必须要有输入输出，因此我们还需要连接UART接口，同时在电脑上安装串口调试助手，来传输和接收我们的程序输入输出。</p>
+<p>在连接完成后按下蓝色开关，给FPGA上电</p>
+<figure class="align-center" id="id32">
+<img alt="controller" src="_images/image051.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-26: FPGA连接对应的数据线</span><a class="headerlink" href="#id32" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来在Flow Navigator窗口中点击Open Hardware Manager按钮</p>
+<figure class="align-center" id="id33">
+<img alt="controller" src="_images/image053.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-27: 打开硬件管理器</span><a class="headerlink" href="#id33" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>点击Hardware窗口中的Auto Connect按钮</p>
+<figure class="align-center" id="id34">
+<img alt="controller" src="_images/image055.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-28: 自动连接按钮</span><a class="headerlink" href="#id34" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>看到下图所示的画面，代表已经连接成功了</p>
+<figure class="align-center" id="id35">
+<img alt="controller" src="_images/image057.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-29: 连接上FPGA后的视图</span><a class="headerlink" href="#id35" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来我们要在项目中为开发板添加一个固化Flash部件，选中芯片右键选择Add Configuration Memory Device</p>
+<figure class="align-center" id="id36">
+<img alt="controller" src="_images/image059.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-30: 右键添加Flash</span><a class="headerlink" href="#id36" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id37">
+<img alt="controller" src="_images/image061.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-31: 选择FPGA支持的Flash型号</span><a class="headerlink" href="#id37" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>然后会询问你是否要烧写新添加的Flash，选择OK，如果不小心关闭了对话框，在新添加的Flash上右键，选择Program Configuration Memory Device</p>
+<figure class="align-center" id="id38">
+<img alt="controller" src="_images/image063.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-32: Flash添加完成后弹出窗口，询问是否进行烧录</span><a class="headerlink" href="#id38" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来我们要选择刚才生成的mcf文件，还有和mcf文件在同一目录下的prm文件，按照下图配置完成后点击OK，就会开始烧录，烧录完成后会弹出窗口，此时在Hardware窗口中可以看到多出了一个Flash的图标</p>
+<figure class="align-center" id="id39">
+<img alt="controller" src="_images/image065.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-33: Flash烧录配置</span><a class="headerlink" href="#id39" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id40">
+<img alt="controller" src="_images/image067.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-34: Flash烧录成功提示</span><a class="headerlink" href="#id40" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id41">
+<img alt="controller" src="_images/image069.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-35: Flash添加成功后视图</span><a class="headerlink" href="#id41" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>接下来我们打开串口调试助手，在FPGA上电启动的情况下，我们选中FPGA对应的串口（不同的电脑可能对应的串口号不同，指导中的是COM4），然后配置好对应得波特率等参数，选择发送文件，然后将希望运行的程序的obj文件通过串口传输给FPGA，其中的LC3 启动程序会自动接收你想要运行的程序，将它存入RAM中，然后开始执行，下图是一个最简单的程序，它通过串口输出Hello!</p>
+<figure class="align-center" id="id42">
+<img alt="controller" src="_images/image071.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-36: Hello程序运行成功截图</span><a class="headerlink" href="#id42" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<p>当然我们也可以运行一些带交互的程序，下图首先给FPGA传输一个计算机系统实验四里的MIN小游戏程序，然后在通过串口输入与LC3交互，实现游玩游戏的过程。</p>
+<figure class="align-center" id="id43">
+<img alt="controller" src="_images/image073.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-37: min游戏运行截图1</span><a class="headerlink" href="#id43" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+<div class="line-block">
+<div class="line"><br/></div>
+</div>
+<figure class="align-center" id="id44">
+<img alt="controller" src="_images/image075.png"/>
+<figcaption>
+<p><span class="caption-text">fig6-38: min游戏运行截图2</span><a class="headerlink" href="#id44" title="Permalink to this image">¶</a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="id6">
+<h2><span class="section-number">6.5. </span>实验总结<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>通过本节课，希望大家能够掌握：</p>
+<ul class="simple">
+<li><p>LC3如何生成可上板运行的verilog代码</p></li>
+<li><p>如何新建一个Vivado工程，并配置生成LC3系统的烧录文件</p></li>
+<li><p>使用串口调试助手在LC3上运行简单的汇编程序</p></li>
+</ul>
+</section>
+</section>
+
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          <a class="prev-page" href="lab5.html">
+              <svg><use href="#svg-arrow-right"></use></svg>
+              <div class="page-info">
+                <div class="context">
+                  <span>Previous</span>
+                </div>
+                
+                <div class="title"><span class="section-number">5. </span>LC3的启动与仿真</div>
+                
+              </div>
+            </a>
+        </div>
+
+        <div class="related-information">
+              Copyright &#169; 2022, zfw |
+          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
+            | <a class="muted-link" href="_sources/lab6.rst.txt"
+               rel="nofollow">
+              Show Source
+            </a>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer">
+      
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            Contents
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">6. LC3-FPGA上板运行</a><ul>
+<li><a class="reference internal" href="#id1">6.1. 实验目的</a></li>
+<li><a class="reference internal" href="#id2">6.2. 实验设备</a></li>
+<li><a class="reference internal" href="#id3">6.3. 实验任务</a></li>
+<li><a class="reference internal" href="#id4">6.4. 实验内容</a><ul>
+<li><a class="reference internal" href="#lc3verilog">6.4.1. 准备LC3顶层verilog文件</a></li>
+<li><a class="reference internal" href="#lc3vivado">6.4.2. 建立LC3的vivado项目</a></li>
+<li><a class="reference internal" href="#id5">6.4.3. 烧录并运行</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id6">6.5. 实验总结</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
+      
+      
+    </aside>
+  </div>
+</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/scripts/furo.js"></script>
+    </body>
+</html>
