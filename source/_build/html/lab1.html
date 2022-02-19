@@ -1,162 +1,58 @@
-<!doctype html>
-<html class="no-js">
-  <head><meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1"/>
-    <meta name="color-scheme" content="light dark"><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="2. 组合电路设计" href="lab2.html" /><link rel="prev" title="Welcome to lc3_lab’s documentation!" href="index.html" />
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <meta name="generator" content="sphinx-4.4.0, furo 2022.01.02"/>
-        <title>1. 环境搭建 - lc3_lab documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?digest=df49af52631e7917044a9c21a57f7b83170a6dd0" />
-    <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?digest=fade93df149f7c5fedb3ff897f799dc7d283b420" />
-    
-    
-
-
-<style>
-  body {
-    --color-code-background: #f8f8f8;
-  --color-code-foreground: black;
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>1. 环境搭建 &mdash; lc3_lab  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
   
-  }
-  body[data-theme="dark"] {
-    --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-  }
-  @media (prefers-color-scheme: dark) {
-    body:not([data-theme="light"]) {
-      --color-code-background: #202020;
-  --color-code-foreground: #d0d0d0;
-  
-    }
-  }
-</style></head>
-  <body>
-    <script>
-      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
-    </script>
-    
-<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-  <symbol id="svg-toc" viewBox="0 0 24 24">
-    <title>Contents</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-      <path stroke="none" d="M0 0h24v24H0z" />
-      <line x1="4" y1="6" x2="20" y2="6" />
-      <line x1="10" y1="12" x2="20" y2="12" />
-      <line x1="6" y1="18" x2="20" y2="18" />
-    </svg>
-  </symbol>
-  <symbol id="svg-menu" viewBox="0 0 24 24">
-    <title>Menu</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
-      <line x1="3" y1="12" x2="21" y2="12"></line>
-      <line x1="3" y1="6" x2="21" y2="6"></line>
-      <line x1="3" y1="18" x2="21" y2="18"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
-    <title>Expand</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
-  </symbol>
-  <symbol id="svg-sun" viewBox="0 0 24 24">
-    <title>Light mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-  </symbol>
-  <symbol id="svg-moon" viewBox="0 0 24 24">
-    <title>Dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
-    </svg>
-  </symbol>
-  <symbol id="svg-sun-half" viewBox="0 0 24 24">
-    <title>Auto light/dark mode</title>
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-shadow">
-      <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M13 12h5" />
-      <path d="M13 15h4" />
-      <path d="M13 18h1" />
-      <path d="M13 9h4" />
-      <path d="M13 6h1" />
-    </svg>
-  </symbol>
-</svg>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="2. 组合电路设计" href="lab2.html" />
+    <link rel="prev" title="Welcome to lc3_lab’s documentation!" href="index.html" /> 
+</head>
 
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
-<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
-<label class="overlay sidebar-overlay" for="__navigation">
-  <div class="visually-hidden">Hide navigation sidebar</div>
-</label>
-<label class="overlay toc-overlay" for="__toc">
-  <div class="visually-hidden">Hide table of contents sidebar</div>
-</label>
-
-
-
-<div class="page">
-  <header class="mobile-header">
-    <div class="header-left">
-      <label class="nav-overlay-icon" for="__navigation">
-        <div class="visually-hidden">Toggle site navigation sidebar</div>
-        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
-      </label>
-    </div>
-    <div class="header-center">
-      <a href="index.html"><div class="brand">lc3_lab  documentation</div></a>
-    </div>
-    <div class="header-right">
-      <div class="theme-toggle-container theme-toggle-header">
-        <button class="theme-toggle">
-          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-          <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
-          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
-          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
-        </button>
-      </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
-        <div class="visually-hidden">Toggle table of contents sidebar</div>
-        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-      </label>
-    </div>
-  </header>
-  <aside class="sidebar-drawer">
-    <div class="sidebar-container">
-      
-      <div class="sidebar-sticky"><a class="sidebar-brand" href="index.html">
-  
-  
-  <span class="sidebar-brand-text">lc3_lab  documentation</span>
-  
-</a><form class="sidebar-search-container" method="get" action="search.html" role="search">
-  <input class="sidebar-search" placeholder=Search name="q" aria-label="Search">
-  <input type="hidden" name="check_keywords" value="yes">
-  <input type="hidden" name="area" value="default">
-</form>
-<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
-  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="index.html" class="icon icon-home"> lc3_lab
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">1. 环境搭建</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">1. 环境搭建</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#id2">1.1. 实验目的</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">1.2. 实验设备</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">1.3. 实验任务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">1.4. 实验内容</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#jdk">1.4.1. 安装JDK</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mill">1.4.2. 安装mill</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verilator">1.4.3. 安装verilator</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">1.4.4. 简单电路设计</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">1.5. 实验总结</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="lab2.html">2. 组合电路设计</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lab3.html">3. LC3控制器的设计</a></li>
 <li class="toctree-l1"><a class="reference internal" href="lab4.html">4. LC3数据通路的设计与验证</a></li>
@@ -164,34 +60,34 @@
 <li class="toctree-l1"><a class="reference internal" href="lab6.html">6. LC3-FPGA上板运行</a></li>
 </ul>
 
-</div>
-</div>
-      </div>
-      
-    </div>
-  </aside>
-  <div class="main">
-    <div class="content">
-      <div class="article-container">
-        <div class="content-icon-container">
-          <div class="theme-toggle-container theme-toggle-content">
-            <button class="theme-toggle">
-              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
-              <svg class="theme-icon-when-auto"><use href="#svg-sun-half"></use></svg>
-              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
-              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
-            </button>
-          </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
-            <div class="visually-hidden">Toggle table of contents sidebar</div>
-            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
-          </label>
         </div>
-        <article role="main">
-          <section id="id1">
-<h1><span class="section-number">1. </span>环境搭建<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h1>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">lc3_lab</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
+      <li><span class="section-number">1. </span>环境搭建</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/lab1.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="id1">
+<h1><span class="section-number">1. </span>环境搭建<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h1>
 <section id="id2">
-<h2><span class="section-number">1.1. </span>实验目的<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.1. </span>实验目的<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>在电脑上安装今后实验所需要的工具</p></li>
 <li><p>初步了解一个简单电路的实现和仿真流程</p></li>
@@ -199,13 +95,13 @@
 </ul>
 </section>
 <section id="id3">
-<h2><span class="section-number">1.2. </span>实验设备<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.2. </span>实验设备<a class="headerlink" href="#id3" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>Ubuntu操作系统的电脑一台，或装有Ubuntu操作系统的虚拟机</p></li>
 </ul>
 </section>
 <section id="id4">
-<h2><span class="section-number">1.3. </span>实验任务<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.3. </span>实验任务<a class="headerlink" href="#id4" title="Permalink to this headline"></a></h2>
 <ul class="simple">
 <li><p>在系统中安装jdk-13</p></li>
 <li><p>在系统中安装mill-0.9.8</p></li>
@@ -222,9 +118,9 @@
 </div>
 </section>
 <section id="id5">
-<h2><span class="section-number">1.4. </span>实验内容<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.4. </span>实验内容<a class="headerlink" href="#id5" title="Permalink to this headline"></a></h2>
 <section id="jdk">
-<h3><span class="section-number">1.4.1. </span>安装JDK<a class="headerlink" href="#jdk" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.4.1. </span>安装JDK<a class="headerlink" href="#jdk" title="Permalink to this headline"></a></h3>
 <p>安装jdk的原因是mill使用时会用到jdk，因为mill不仅能够编译Scala，也能够用来构建java的工程。在Ubuntu中可以直接通过以下命令安装</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo apt install -y openjdk-13-jdk
 </pre></div>
@@ -240,56 +136,56 @@ OpenJDK <span class="m">64</span>-Bit Server VM GraalVM CE <span class="m">21</s
 </div>
 </section>
 <section id="mill">
-<h3><span class="section-number">1.4.2. </span>安装mill<a class="headerlink" href="#mill" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.4.2. </span>安装mill<a class="headerlink" href="#mill" title="Permalink to this headline"></a></h3>
 <p>mill是LC3项目使用的build tool，用来将我们写的Chisel代码编译成verilog，在之后的实验中会使用到。
 安装mill首先需要安装curl程序，curl是一个利用URL规则在命令行下工作的文件传输工具。
 安装完curl，利用该工具安装mill并加执行权限。</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo apt install -y curl
-mill sudo bash -c <span class="s2">"curl -L https://github.com/com-lihaoyi/mill/releases/download/0.9.8/0.9.8 &gt; /usr/local/bin/mill &amp;&amp; chmod +x /usr/local/bin/mill"</span>
+mill sudo bash -c <span class="s2">&quot;curl -L https://github.com/com-lihaoyi/mill/releases/download/0.9.8/0.9.8 &gt; /usr/local/bin/mill &amp;&amp; chmod +x /usr/local/bin/mill&quot;</span>
 </pre></div>
 </div>
 <p>之后运行 <code class="docutils literal notranslate"><span class="pre">mill</span> <span class="pre">version</span></code> 命令，第一次运行它会下载一些必要的文件，可能需要等待一段时间，在运行完成后你应该看到你安装的mill的版本号，这代表mill安装完成。</p>
 <figure class="align-center" id="id8">
-<img alt="mill" src="_images/mill.png"/>
+<img alt="mill" src="_images/mill.png" />
 <figcaption>
-<p><span class="caption-text">fig1-1: mill version</span><a class="headerlink" href="#id8" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">fig1-1: mill version</span><a class="headerlink" href="#id8" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </section>
 <section id="verilator">
-<h3><span class="section-number">1.4.3. </span>安装verilator<a class="headerlink" href="#verilator" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.4.3. </span>安装verilator<a class="headerlink" href="#verilator" title="Permalink to this headline"></a></h3>
 <p>verilator和curl一样，直接安装后查看版本。</p>
 <div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>sudo apt install -y verilator
 verilator --version
 </pre></div>
 </div>
 <figure class="align-center" id="id9">
-<img alt="verilator" src="_images/verilator.png"/>
+<img alt="verilator" src="_images/verilator.png" />
 <figcaption>
-<p><span class="caption-text">fig1-2: verilator version</span><a class="headerlink" href="#id9" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">fig1-2: verilator version</span><a class="headerlink" href="#id9" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </section>
 <section id="id6">
-<h3><span class="section-number">1.4.4. </span>简单电路设计<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h3><span class="section-number">1.4.4. </span>简单电路设计<a class="headerlink" href="#id6" title="Permalink to this headline"></a></h3>
 <p>接下来我们可能会需要写一些代码，在每次迭代中，我们首先需要编写或修改Chisel的代码，然后使用mill将其编译生成对应的verilog代码，然后再用verilator将其编译转换成用来仿真的C++代码，最后再执行仿真。
 当然这个过程比较复杂，一般都是用make或cmake之类的命令来控制的，这个具体的流程可以留到下一次实验来做，这节课我们可以先写点简单的：用verilog编写一个3-8译码器，然后用verilator将它运行起来</p>
 <p><strong>编写一个3-8译码器</strong>
 3-8译码器是一个纯组合逻辑，输入0-7的数字n，返回一个8bits的信号，其中第n位是1，其它位都是0，下表是3-8译码器的真值表</p>
-<div class="table-wrapper"><table class="docutils align-default">
+<table class="docutils align-default">
 <colgroup>
-<col style="width: 5%"/>
-<col style="width: 8%"/>
-<col style="width: 8%"/>
-<col style="width: 8%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
-<col style="width: 9%"/>
+<col style="width: 5%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 8%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
+<col style="width: 9%" />
 </colgroup>
 <thead>
 <tr class="row-odd"><th class="head"><p>in</p></th>
@@ -412,7 +308,7 @@ verilator --version
 <td><p>0</p></td>
 </tr>
 </tbody>
-</table></div>
+</table>
 <p>首先我们找个合适的地方，新建一个目录，取名为decoder，然后进入到这个目录下。接下来按照这个真值表，用verilog编写相应的模块，参考代码如下，建议大家最好能够做到不看参考代码自己实现。</p>
 <div class="highlight-verilog notranslate"><div class="highlight"><pre><span></span><span class="c1">// decoder.v</span>
 <span class="k">module</span><span class="w"> </span><span class="n">decoder</span><span class="p">(</span><span class="w"></span>
@@ -424,15 +320,15 @@ verilator --version
 
 <span class="k">always</span><span class="w"> </span><span class="p">@(</span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="k">begin</span><span class="w"></span>
 <span class="k">case</span><span class="p">(</span><span class="n">in</span><span class="p">)</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d0</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b00000001</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d1</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b00000010</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d2</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b00000100</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d3</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b00001000</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d4</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b00010000</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d5</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b00100000</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d6</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b01000000</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="mh">3</span><span class="mi">'d7</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b10000000</span><span class="p">;</span><span class="w"></span>
-<span class="w">                    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">'b0</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d0</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b00000001</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d1</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b00000010</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d2</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b00000100</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d3</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b00001000</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d4</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b00010000</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d5</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b00100000</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d6</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b01000000</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="mh">3</span><span class="mi">&#39;d7</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b10000000</span><span class="p">;</span><span class="w"></span>
+<span class="w">                    </span><span class="k">default</span><span class="o">:</span><span class="w"> </span><span class="n">out_reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mh">8</span><span class="mb">&#39;b0</span><span class="p">;</span><span class="w"></span>
 <span class="w">            </span><span class="k">endcase</span><span class="w"></span>
 <span class="w">    </span><span class="k">end</span><span class="w"></span>
 
@@ -444,7 +340,7 @@ verilator --version
 <p>编写用于控制verilator仿真的main函数。
 verilator在仿真前需要自己编写一个main函数，来控制整个仿真过程的一些行为，以下是参考代码</p>
 <div class="highlight-c++ notranslate"><div class="highlight"><pre><span></span><span class="c1">// sim_main.cpp</span>
-<span class="cp">#include</span><span class="w"> </span><span class="cpf">"Vdecoder.h"</span><span class="c1"> // 这个头文件会根据你模块的名字不同而改变</span><span class="cp"></span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;Vdecoder.h&quot;</span><span class="c1"> // 这个头文件会根据你模块的名字不同而改变</span><span class="cp"></span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;verilated.h&gt;</span><span class="cp"></span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;bitset&gt;</span><span class="c1"> // 用于输出二进制的数据</span><span class="cp"></span>
@@ -461,8 +357,8 @@ verilator在仿真前需要自己编写一个main函数，来控制整个仿真�
 <span class="w">        </span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">in</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">code</span><span class="p">;</span><span class="w"></span>
 
 <span class="w">        </span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">eval</span><span class="p">();</span><span class="w"> </span><span class="c1">// 每执行一次eval函数，就对decoder模块执行一次仿真</span>
-<span class="w">        </span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"in: "</span><span class="o">&lt;&lt;</span><span class="n">code</span><span class="o">&lt;&lt;</span><span class="s">"</span><span class="se">\t</span><span class="s">"</span><span class="p">;</span><span class="w"></span>
-<span class="w">        </span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">"out: "</span><span class="o">&lt;&lt;</span><span class="n">bitset</span><span class="o">&lt;</span><span class="mi">8</span><span class="o">&gt;</span><span class="p">(</span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">out</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="c1">// 输出deocder模块的out接口的信号</span>
+<span class="w">        </span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;in: &quot;</span><span class="o">&lt;&lt;</span><span class="n">code</span><span class="o">&lt;&lt;</span><span class="s">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">;</span><span class="w"></span>
+<span class="w">        </span><span class="n">cout</span><span class="o">&lt;&lt;</span><span class="s">&quot;out: &quot;</span><span class="o">&lt;&lt;</span><span class="n">bitset</span><span class="o">&lt;</span><span class="mi">8</span><span class="o">&gt;</span><span class="p">(</span><span class="n">decoder</span><span class="o">-&gt;</span><span class="n">out</span><span class="p">)</span><span class="o">&lt;&lt;</span><span class="n">endl</span><span class="p">;</span><span class="w"> </span><span class="c1">// 输出deocder模块的out接口的信号</span>
 
 <span class="w">        </span><span class="n">code</span><span class="o">++</span><span class="p">;</span><span class="w"></span>
 <span class="w">    </span><span class="p">}</span><span class="w"></span>
@@ -480,9 +376,9 @@ verilator在仿真前需要自己编写一个main函数，来控制整个仿真�
 </div>
 <p>在你解决完所有的错误后，你应该能够看到在当前目录下生成了一个新的目录obj_dir，进到这个目录后能够看到这些文件。</p>
 <figure class="align-center" id="id10">
-<img alt="decoder" src="_images/decoder.png"/>
+<img alt="decoder" src="_images/decoder.png" />
 <figcaption>
-<p><span class="caption-text">fig1-3: 生成的文件</span><a class="headerlink" href="#id10" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">fig1-3: 生成的文件</span><a class="headerlink" href="#id10" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 <p>接下来回到decoder目录，运行</p>
@@ -492,15 +388,15 @@ verilator在仿真前需要自己编写一个main函数，来控制整个仿真�
 <p>就会看到在obj_dir目录下新生成了一个名为Vdecoder的可执行文件，运行这个文件，你就能够看到decoder这个模块对应的输入和输出，确保它的功能正常。
 如果运行时出现了错误，请耐心的按照错误信息定位检查代码中的问题</p>
 <figure class="align-center" id="id11">
-<img alt="decoder_out" src="_images/decoder_out.png"/>
+<img alt="decoder_out" src="_images/decoder_out.png" />
 <figcaption>
-<p><span class="caption-text">fig1-4: decoder仿真输出</span><a class="headerlink" href="#id11" title="Permalink to this image">¶</a></p>
+<p><span class="caption-text">fig1-4: decoder仿真输出</span><a class="headerlink" href="#id11" title="Permalink to this image"></a></p>
 </figcaption>
 </figure>
 </section>
 </section>
 <section id="id7">
-<h2><span class="section-number">1.5. </span>实验总结<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<h2><span class="section-number">1.5. </span>实验总结<a class="headerlink" href="#id7" title="Permalink to this headline"></a></h2>
 <p>通过本节课，希望大家能够掌握：</p>
 <ul class="simple">
 <li><p>Chisel开发环境的搭建</p></li>
@@ -509,84 +405,35 @@ verilator在仿真前需要自己编写一个main函数，来控制整个仿真�
 </section>
 </section>
 
-        </article>
-      </div>
-      <footer>
-        
-        <div class="related-pages">
-          <a class="next-page" href="lab2.html">
-              <div class="page-info">
-                <div class="context">
-                  <span>Next</span>
-                </div>
-                <div class="title"><span class="section-number">2. </span>组合电路设计</div>
-              </div>
-              <svg><use href="#svg-arrow-right"></use></svg>
-            </a>
-          <a class="prev-page" href="index.html">
-              <svg><use href="#svg-arrow-right"></use></svg>
-              <div class="page-info">
-                <div class="context">
-                  <span>Previous</span>
-                </div>
-                
-                <div class="title">Home</div>
-                
-              </div>
-            </a>
-        </div>
 
-        <div class="related-information">
-              Copyright &#169; 2022, zfw |
-          Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
-          <a href="https://github.com/pradyunsg/furo">Furo theme</a>.
-            | <a class="muted-link" href="_sources/lab1.rst.txt"
-               rel="nofollow">
-              Show Source
-            </a>
-        </div>
-        
-      </footer>
-    </div>
-    <aside class="toc-drawer">
-      
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            Contents
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">1. 环境搭建</a><ul>
-<li><a class="reference internal" href="#id2">1.1. 实验目的</a></li>
-<li><a class="reference internal" href="#id3">1.2. 实验设备</a></li>
-<li><a class="reference internal" href="#id4">1.3. 实验任务</a></li>
-<li><a class="reference internal" href="#id5">1.4. 实验内容</a><ul>
-<li><a class="reference internal" href="#jdk">1.4.1. 安装JDK</a></li>
-<li><a class="reference internal" href="#mill">1.4.2. 安装mill</a></li>
-<li><a class="reference internal" href="#verilator">1.4.3. 安装verilator</a></li>
-<li><a class="reference internal" href="#id6">1.4.4. 简单电路设计</a></li>
-</ul>
-</li>
-<li><a class="reference internal" href="#id7">1.5. 实验总结</a></li>
-</ul>
-</li>
-</ul>
-
+           </div>
           </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to lc3_lab’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="lab2.html" class="btn btn-neutral float-right" title="2. 组合电路设计" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, zfw.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
         </div>
       </div>
-      
-      
-    </aside>
+    </section>
   </div>
-</div><script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-    <script src="_static/jquery.js"></script>
-    <script src="_static/underscore.js"></script>
-    <script src="_static/doctools.js"></script>
-    <script src="_static/scripts/furo.js"></script>
-    </body>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
 </html>
