@@ -4,6 +4,7 @@ LC3-FPGA上板运行
 实验目的
 ---------
 
+- 在电脑上安装vivado
 - 学会在vivado上建立项目
 - 了解将程序烧入FPGA的流程
 
@@ -12,13 +13,23 @@ LC3-FPGA上板运行
 - Ubuntu操作系统的电脑一台，或装有Ubuntu操作系统的虚拟机
 - 一块FPGA板，指导中使用的是达芬奇FPGA开发板，上面搭载的主控芯片是Xilinx Artix7系列XC7A35T
 - vivado软件，指导中使用的是v2020.1
+- FPGA开发指南
+- vivado license
 
 实验任务
 --------
 
+- 安装vivado
 - 准备LC3顶层verilog文件
 - 建立LC3的vivado项目
 - 将LC3烧录到FPGA上运行
+
+安装vivado
+--------
+
+由于vivado对电脑资源占用较大，因此不建议装在虚拟机中，最好装在原系统上，参考Xilinx的官方文档进行vivado的 `下载和安装 <https://china.xilinx.com/content/dam/xilinx/support/documentation/sw_manuals/xilinx2020_1/ug973-vivado-release-notes-install-license.pdf#namedDest=xDownloadingTheVivadoDesignSuiteTools>`_
+
+`这里 <https://blog.csdn.net/hpf821010/article/details/115893404>`_ 给出了vivado安装过程的截图
 
 实验内容
 --------
@@ -28,16 +39,17 @@ LC3-FPGA上板运行
 
 首先我们需要做的不是建立一个新的vivado项目，而是先生成我们需要的用来烧录FPGA的verilog文件，这个文件跟我们仿真时生成的verilog文件还有些微的不同，具体在Memory.scala文件中。
 我们可以看到三种Memory的定义，而在生成verilog的过程中，具体使用哪种Memory，取决于CoreConfig.FPGAPlatform和CoreConfig.REPLACE_MEM两个变量的值，这两个变量在Top.scala文件中定义。
-接下来介绍这三种Memory不同的适用场景。
+接下来介绍这三种Memory不同的适用场景：
 
-1. 当FPGAPlatform为false时，代表只需要仿真即可，此时会生成RAMHelper模块，这是一个用DPI-C导入的一个C程序，其本质就是C++中的一个数组，根据接口信号读取和写入对应位置的元素。之所以在仿真时要使用C++来仿真ram，是因为我们需要在整个LC3系统运行起来之前，给ram中初始化一些我们需要的程序，比如说一些trap程序，启动程序。虽然这个直接用verilog来编写也可以做到，但是还是用C++来实现更加灵活简单
-2. 当FPGAPlatform为true时，代表你不需要用于仿真，而是要用于其他的功能，首先当REPLACE_MEM为false时，会生成lut_mem模块，这就是一个用verolog写的最简单的ram，没有ram初始化功能，这样生成的verilog其实是不能正常运行的，虽然它的电路都有，但是因为ram中没有程序，所以电路的行为不确定，这种配置主要是用于给后端做一些布局布线时使用，因为如果像在FPGA上运行的verilog使用了第三方ram的ip，会导致综合出来的ram是空的
-3. 当FPGAPlatform为true且REPLACE_MEM为true时，代表你需要将生成的verilog代码烧录到FPGA上运行。此时会生成一个dual_mem模块，其实可以看到这是个空模块，内部没有任何的逻辑。其实这个模块是一个FPGA上的第三方ip核，接下来我们会在vivado中引入这个ip核，这样在FPGA综合时，就会使用FPGA上的ram资源，而不是直接使用lut搭建一个ram，直接使用lut搭建ram，我们的FPGA板卡上的lut资源是不够的
+1. 当FPGAPlatform为false时，代表只需要仿真即可，此时会生成RAMHelper模块，这是一个用DPI-C导入的一个C程序，其本质就是C++中的一个数组，根据接口信号读取和写入对应位置的元素。之所以在仿真时要使用C++来仿真ram，是因为我们需要在整个LC3系统运行起来之前，给ram中初始化一些我们需要的程序，比如说一些trap程序，启动程序。虽然这个直接用verilog来编写也可以做到，但是还是用C++来实现更加灵活简单。
+2. 当FPGAPlatform为true时，代表你不需要用于仿真，而是要用于其他的功能，首先当REPLACE_MEM为false时，会生成lut_mem模块，这就是一个用verolog写的最简单的ram，没有ram初始化功能，这样生成的verilog其实是不能正常运行的，虽然它的电路都有，但是因为ram中没有程序，所以电路的行为不确定，这种配置主要是用于给后端做一些布局布线时使用，因为如果像在FPGA上运行的verilog使用了第三方ram的ip，会导致综合出来的ram是空的。
+3. 当FPGAPlatform为true且REPLACE_MEM为true时，代表你需要将生成的verilog代码烧录到FPGA上运行。此时会生成一个dual_mem模块，可以看到这是个空模块，内部没有任何的逻辑。其实这个模块是一个FPGA上的第三方ip核，接下来我们会在vivado中引入这个ip核，这样在FPGA综合时，就会使用FPGA上的ram资源，而不是直接使用lut搭建一个ram，直接使用lut搭建ram，我们的FPGA板卡上的lut资源是不够的。**在本实验中应该使用第3种配置**。
+
+配置完之后就可以使用make verilog命令生成需要在FPGA上运行的verilog文件了。
 
 建立LC3的vivado项目
 ****************************
 
-当然vivado怎么安装就不介绍了，至于你是安装在Ubuntu系统还是Windows系统也无所谓，安装完vivado记得去找个license，这个东西实验课是不是不太好直接给，涉及到一些版权问题？
 在vivado新建一个项目，起一个项目名，比如指导中给项目命名为lc3_fpga
 
 .. figure:: _static/image001.png
@@ -91,7 +103,10 @@ LC3-FPGA上板运行
 
     fig6-7: IP Catalog按钮位置
 
-按照下图的配置好参数，点击OK按钮，然后弹出的窗口直接点击Generate
+按照下图的配置好参数，点击OK按钮，然后弹出的窗口直接点击Generate。
+
+.. hint::
+    关于FPGA中RAM的使用和相关配置参数的含义，可以参考FPGA开发指南中的第16章
 
 .. figure:: _static/image015.png
     :alt: controller
@@ -167,6 +182,9 @@ LC3-FPGA上板运行
 
 接下来我们要为vivado项目添加一个约束文件，这一步与添加Source文件类似，只是由选择Add or create design sources变为了Add or create constraints，这个文件主要是用来将LC3的时钟、复位接口和Uart接口与FPGA上对应的引脚连接，注意这里我们并没有将reset按钮映射到FPGA的reset按钮上，而是映射到了KEY0按钮上。因为如果映射到reset按钮上，只有reset按钮一直处于按下的状态，系统才会正常工作。后半部分的功能主要是为了生成的bit流文件转换成固化文件后能够适用于4bit位宽SPI通信的flash器件，代码如下：
 
+.. hint::
+    如果需要修改对应的按键，可以参考附件中的FPGA开发板IO引脚分配表，其中给出了FPGA板上所有按键对应的编号
+
 .. code-block:: perl
 
     create_clock -period 20.000 -name clk [get_ports clock]
@@ -206,28 +224,28 @@ LC3-FPGA上板运行
     fig6-20: 添加仿真文件
 
 
-然后直接点OK，在Sources窗口中找到test.v文件，test.v的参考代码如下
+然后直接点OK，在Sources窗口中找到test.v文件，test.v的参考代码如下：
 
 .. code-block:: verilog
 
-    `timescale 1ns / 1ps
+    `timescale 1ns / 1ps // 代表仿真时间单位/时间精度，这里代表的是1ns是基础的时间单位，而时间单位最多可以精确到1ps，例如使用verilog中的延时语句，#1代表延时1ns，1ps表示延时最多可以精确到小数点后3位，即0.0001ns
     module test();
         reg sys_clk;
         reg sys_rst_n;
     
-        wire txd;
+        wire txd; // 连接UART接口
     
-         initial begin
+         initial begin // 给时钟赋初值，reset信号最开始是有效的，在100ns后reset信号撤销
             sys_clk = 1'b0;
             sys_rst_n = 1'b1;
             #100
             sys_rst_n = 1'b0;
         end
     
-        always #10 sys_clk = ~sys_clk;
+        always #10 sys_clk = ~sys_clk; // 设置时钟每10ns反转一次，则一个时钟周期是20ns
     
     
-        Top top(
+        Top top( // 实例化LC3顶层模块
             .clock(sys_clk),
             .reset(sys_rst_n),
             .io_uart_rxd(1'b0),
