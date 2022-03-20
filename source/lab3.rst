@@ -290,12 +290,15 @@ Controller 是计算机中最为核心的一个部件，控制着机器的运行
 
 **单元测试**
 
-单元测试是一种快捷的仿真手段，主要用于对模块的输入端口输入信号激励，并能够获取输出端口的信号值。其原理如下图所示。
+单元测试是一种快捷的仿真手段，主要用于对模块的输入端口输入信号激励，并能够获取输出端口的信号值，通过判断获取输出值的对错来保证模块设计的正确性。其原理如下图所示。
 
 .. figure:: _static/dut.png
     :alt: state
     :align: center
     :scale: 80 %
+|
+
+**ChiselTest**
 
 在Chisel设计中，我们通常采用ChiselTest来搭建单元测试，用poke方法来对模块的输入端口输入激励，用peek方法观察输出，此外还可以用expert来检查输出是否符合预期。
 对于时序电路，使用 clock.step 来打一拍。
@@ -343,7 +346,6 @@ Controller 是计算机中最为核心的一个部件，控制着机器的运行
     :align: center
     
 
-    fig3-1: LC3状态机
 
 测试代码如下：
 
@@ -400,7 +402,7 @@ Controller 是计算机中最为核心的一个部件，控制着机器的运行
 .. figure:: _static/controllertest.png
     :alt: state
     :align: center
-
+|
 
     **选做Task2** (src/main/scala/LC3/controller.scala):根据《计算机系统概论》p369 和 p377列出所有的状态转移。尝试编写验证代码来验证 AND 和 BR（注意是否需要其他输入条件） 指令的状态转移是否正确
 
