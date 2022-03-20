@@ -58,7 +58,8 @@
 .. code-block:: shell
 
     sudo apt install -y curl
-    mill sudo bash -c "curl -L https://github.com/com-lihaoyi/mill/releases/download/0.9.8/0.9.8 > /usr/local/bin/mill && chmod +x /usr/local/bin/mill"
+    mill sudo bash -c "curl -L https://github.com/com-lihaoyi/mill/releases/download/0.9.8/0.9.8 >
+    /usr/local/bin/mill && chmod +x /usr/local/bin/mill"
 
 之后运行 ``mill version`` 命令，第一次运行它会下载一些必要的文件，可能需要等待一段时间，在运行完成后你应该看到你安装的mill的版本号，这代表mill安装完成。
 

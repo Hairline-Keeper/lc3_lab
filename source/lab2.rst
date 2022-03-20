@@ -43,7 +43,8 @@
     import chisel3._
     import chisel3.util._
     import chisel3.stage._
-    // RawModule与Module不同，它不会生成隐式的时钟，由于译码器是组合电路，因此现在还没有涉及到时钟的概念，只用RawModule即可
+    // RawModule与Module不同，它不会生成隐式的时钟，由于译码器是组合电路，
+    // 因此现在还没有涉及到时钟的概念，只用RawModule即可
     class Decoder extends RawModule {
         val io = IO(new Bundle{
             val in = Input(UInt(3.W)) // 输入的0-7信号，二进制表示只需要3bits宽即可
@@ -140,7 +141,7 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
 
     .DEFAULT_GOAL = verilog # 规定了默认的编译目标，例如这里，运行make，等同于运行 make verilog命令
 
-    $(TOP_V): $(SCALA_FILE) # 这里我们找到所有的Chisel源文件，然后用mill将Chisel代码编译为verilog文件，存入build目录中
+    $(TOP_V): $(SCALA_FILE) # 这里我们找到所有的Chisel源文件，然后用mill将Chisel代码编译为verilog文件
     	@mkdir -p $(@D)
     	mill decoder.run decoder.main.testMain -td $(@D) --output-file $(@F)
 
@@ -152,7 +153,9 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
     EMU := $(BUILD_DIR)/emu # 用Verilator编译之后自动生成的可执行文件路径
     CXX_FILE := ./sim_main.cpp # Verilator的顶层main函数源文件
 
-    $(EMU_MK): $(TOP_V) | $(EMU_DEPS) # 找到verilog文件，用Verilator编译，生成相关的头文件和C++代码，以及Makfile文件。EMU_DEPS代表生成EMU可能需要的一些依赖文件，这里没有可以直接忽视
+     # 找到verilog文件，用Verilator编译，生成相关的头文件和C++代码，以及Makfile文件
+     # EMU_DEPS代表生成EMU可能需要的一些依赖文件，这里没有可以直接忽视
+    $(EMU_MK): $(TOP_V) | $(EMU_DEPS)
     	@mkdir -p $(@D)
     	verilator -Wall --cc --exe \
     		-o $(abspath $(EMU)) -Mdir $(@D) $^ $(CXX_FILE)
