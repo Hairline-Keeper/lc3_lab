@@ -1,4 +1,4 @@
-组合电路设计
+组合电路与时序电路设计
 ===========
 
 实验目的
@@ -18,6 +18,7 @@
 - 使用Chisel重新实现我们在实验一中用verilog编写的3-8译码器
 - 编写build.sc文件，指定Scala和Chisel的版本
 - 编写Makefile文件，指定编译仿真的规则
+- 使用Chisel实现一个简单状态机，能够检测序列1101
 
 实验内容
 --------
@@ -37,7 +38,7 @@
 
 .. code-block:: scala
 
-    ./decoder/src/main.scala
+    // ./decoder/src/main.scala
     package decoder
     import chisel3._
     import chisel3.util._
@@ -173,6 +174,110 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
     fig2-2: 完整的项目结构
 
 运行./build/emu后应该能看到和实验一一样的输出。
+
+使用Chisel实现序列检测
+***********************
+
+接下来尝试使用Chisel来描述一个有限状态机 (FSM)，并用它来检测1101的固定序列。
+
+题目描述如下：按照时间周期，输入一个长序列：{1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0}，每周期输入一个bit，当周期的bit和前3个周期的bit拼起来正好是1101序列时，输出1，其余时间输出0
+
+可以看出，这道题和3-8译码器最大的区别在于，它需要记录之前周期的状态，即输出不仅取决于当周期的输入信号，而且还取决于电路原来的状态，这就是时序电路和组合电路的区别。
+
+首先请按照题目描述，尝试画出相应的状态转移图
+
+.. figure:: _static/FSM.jpg
+    :alt: dirtree
+    :align: center
+
+    fig2-3: 状态转移图
+
+接下来新建一个Chisel项目，也可以将之前decoder目录直接复制一遍，记得将相关的目录名，Makefile里编译命令的路径修改为序列检测的名称，例如改为detection
+
+.. hint:: 
+    Makfile中VCerilator的编译命令可以尝试去掉其中的-Wall参数，看看有什么不同，查阅手册看看这个参数是什么作用
+
+之后编写Chisel中的序列检测代码，需要注意的是这次Detection继承的不再是RawModule类，而是Module类，因为它是时序逻辑，需要保存每个周期的状态，因此需要接入时钟，但是在本题中时钟并不需要显式的使用。基本的代码框架已给出，请在注释处补完主要的功能代码。
+
+.. code-block:: scala
+
+    // detection/src/main.scala
+    package detection
+
+    import chisel3._
+    import chisel3.util._
+
+    class Detection extends Module {
+        val io = IO(new Bundle{
+            val in = Input(Bool()) // 输入序列，每周期输入1 bit
+            val out = Output(Bool()) // 输出的信号，当检测到“1101”序列时输出1，其他时间为0
+        })
+
+        /*
+            请在此处补完缺失的代码
+        */
+
+        printf(p"in = ${io.in}, out = ${io.out}\n")
+    }
+
+    object testMain extends App {
+        Driver.execute(args, () => new Detection)
+    }
+
+Chisel代码完成后，还需要修改sim_main.cpp顶层文件，在测试3-8译码器时，我们在主循环中每次迭代修改传送给decoder的输入，并读出decoder的输出端口的值。
+而在编写时序逻辑时，我们首先需要在顶层实现一个时钟信号。也就是定义一个变量，隔一段时间对它进行一次翻转。另外我们在顶层函数中定义想要给fetection输入的序列seq，并且每周期将其中的元素递增送往detection模块。sim_main.cpp的顶层框架代码如下：
+
+.. code-block:: scala
+
+    // sim_main.cpp
+    #include "VDetection.h"
+    #include <verilated.h>
+    #include <iostream>
+    #include <bitset>
+
+    using namespace std;
+
+    int main(int argc, char **argv, char **env){
+        Verilated::commandArgs(argc, argv);
+        VDetection* detection = new VDetection;
+
+        int main_time = 0;
+        int seq_ptr = 0;
+        int seq[] = {1, 1, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0};
+
+        while (!Verilated::gotFinish() && main_time <= 200) {
+
+            if ((main_time % 10) == 1) {
+                detection->clock = 1;
+            }
+            if ((main_time % 10) == 6) {
+                detection->clock = 0;
+
+                seq_ptr = (seq_ptr + 1) % 14;
+                // cout<<"in: "<<seq[seq_ptr]<<"\t";
+                // cout<<"out: "<<bitset<1>(detection->io_out)<<endl<<endl;
+            }
+
+            detection->io_in = seq[seq_ptr];
+            detection->eval();
+            main_time++;
+        }
+
+        detection->final();
+        delete detection;
+        exit(0);
+    }
+
+.. hint:: 
+    这次我们将用于调试的printf函数改为了使用Chisel中的printf函数，而没有选择在sim_main.cpp里输出，为什么要这样，如果改成在sim_main.cpp中输出会有什么效果？
+
+如果实现无误，最终运行应该能够看到类似的输出：
+
+.. figure:: _static/fsm_output.png
+    :alt: dirtree
+    :align: center
+
+    fig2-4: 序列检测运行结果
 
 实验总结
 --------

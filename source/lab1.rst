@@ -51,7 +51,7 @@
 安装mill
 ********
 
-mill是LC3项目使用的build tool，用来将我们写的Chisel代码编译成verilog代码，在之后的实验中会使用到。
+`mill <https://com-lihaoyi.github.io/mill/mill/Intro_to_Mill.html>`_ 是LC3项目使用的build tool，用来将我们写的Chisel代码编译成verilog代码，在之后的实验中会使用到。
 安装mill首先需要安装curl程序，curl是一个利用URL规则在命令行下工作的文件传输工具。
 安装完curl，利用该工具安装mill并加执行权限。
 
@@ -72,8 +72,7 @@ mill是LC3项目使用的build tool，用来将我们写的Chisel代码编译成
 安装verilator
 *************
 
-
-verilator和curl一样，直接安装后查看版本。
+`Verilator <https://www.veripool.org/verilator/>`_ 和curl一样，直接安装后查看版本。
 
 .. code-block:: shell
 
