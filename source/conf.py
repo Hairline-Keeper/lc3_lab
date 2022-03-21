@@ -17,7 +17,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = 'lc3_lab'
+project = 'lc3_solution'
 copyright = '2022, zfw'
 author = 'zfw'
 
