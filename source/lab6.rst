@@ -290,9 +290,9 @@ LC3-FPGA上板运行
     :alt: controller
     :align: center
 
-    fig6-23: 弹出对话框选择生成mcf文件
+    fig6-23: 弹出对话框选择生成mcs文件
 
-接着按照下图格式进行配置，点击OK后，看到弹出对话框，表示mcf文件已经生成成功
+接着按照下图格式进行配置，点击OK后，看到弹出对话框，表示mcs文件已经生成成功
 
 
 
@@ -300,7 +300,7 @@ LC3-FPGA上板运行
     :alt: controller
     :align: center
 
-    fig6-24: 生成mcf文件配置
+    fig6-24: 生成mcs文件配置
 |
 
 
@@ -308,7 +308,7 @@ LC3-FPGA上板运行
     :alt: controller
     :align: center
 
-    fig6-25: mcf文件生成成功提示窗口
+    fig6-25: mcs文件生成成功提示窗口
 
 接下来就要正式开始烧录了，首先需要连接好开发板，先将FPGA板上的JTAG下载接口连接好，接口的具体位置可以参考FPGA开发指南第二章的2.1.1节图示，通过这个接口将我们的程序烧录到FPGA上自带的Flash中，这样在开机后FPGA就会从Flash中运行我们烧录好的程序。
 
@@ -376,7 +376,7 @@ LC3-FPGA上板运行
 
     fig6-32: Flash添加完成后弹出窗口，询问是否进行烧录
 
-接下来要选择刚才生成的mcf文件，还有和mcf文件在同一目录下的prm文件，按照下图配置完成后点击OK，就会开始烧录，烧录完成后会弹出窗口，此时在Hardware窗口中可以看到多出了一个Flash的图标
+接下来要选择刚才生成的mcs文件，还有和mcs文件在同一目录下的prm文件，按照下图配置完成后点击OK，就会开始烧录，烧录完成后会弹出窗口，此时在Hardware窗口中可以看到多出了一个Flash的图标
 
 .. figure:: _static/image065.png
     :alt: controller
