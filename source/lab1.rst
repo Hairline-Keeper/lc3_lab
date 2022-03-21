@@ -129,6 +129,8 @@
 
 首先找个合适的路径，新建一个目录，取名为decoder，然后进入到这个目录下。新建一个文件decoder.v，接下来按照给出的真值表，用verilog编写相应的模块功能代码，下面以及给出了基本的模块定义和部分代码，请大家在学习了verilog的基础知识后，将模块代码补全。
 
+    **Task1** 补完decoder.v代码中空缺的部分
+
 .. code-block:: verilog
 
     // decoder.v

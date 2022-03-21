@@ -35,6 +35,9 @@
 
 .. hint:: 
     整个实验指导中所说的decoder目录都是外面这个decoder目录，而不是里面嵌套的这个目录，整个目录的结构在图2-2中可以看到
+|
+
+    **Task1** 补完decoder/src/main.scala代码中空缺的部分
 
 .. code-block:: scala
 
@@ -229,6 +232,8 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
 
 Chisel代码完成后，还需要修改sim_main.cpp顶层文件，在测试3-8译码器时，在主循环中每次迭代修改传送给decoder的输入，并读出decoder的输出端口的值。
 而在编写时序逻辑时，首先需要在顶层实现一个时钟信号。也就是定义一个变量，隔一段时间对它进行一次翻转。另外在顶层函数中定义想要给fetection输入的序列seq，并且每周期将其中的元素递增送往detection模块。sim_main.cpp的顶层框架代码如下：
+
+    **Task2** 补完detection/src/main.scala代码中空缺的部分
 
 .. code-block:: scala
 
