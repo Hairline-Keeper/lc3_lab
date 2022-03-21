@@ -220,5 +220,7 @@ Verilator会将verilog代码中的模块编译成一个"V+模块名"的头文件
 通过本节课，希望大家能够掌握：
 
 - Chisel开发环境的搭建
+  
 - 掌握verilog的基本语法
+  
 - 使用verilator对verilog代码进行仿真的流程，以及相应代码的作用
