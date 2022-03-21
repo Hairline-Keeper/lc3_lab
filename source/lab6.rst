@@ -37,13 +37,13 @@ LC3-FPGA上板运行
 准备LC3顶层verilog文件
 ****************************
 
-首先我们需要做的不是建立一个新的vivado项目，而是先生成我们需要的用来烧录FPGA的verilog文件，这个文件跟我们仿真时生成的verilog文件还有些微的不同，具体在Memory.scala文件中。
-我们可以看到三种Memory的定义，而在生成verilog的过程中，具体使用哪种Memory，取决于CoreConfig.FPGAPlatform和CoreConfig.REPLACE_MEM两个变量的值，这两个变量在Top.scala文件中定义。
+首先需要做的不是建立一个新的vivado项目，而是先生成需要的用来烧录FPGA的verilog文件，这个文件跟仿真时生成的verilog文件还有些微的不同，具体在Memory.scala文件中。
+可以看到三种Memory的定义，而在生成verilog的过程中，具体使用哪种Memory，取决于CoreConfig.FPGAPlatform和CoreConfig.REPLACE_MEM两个变量的值，这两个变量在Top.scala文件中定义。
 接下来介绍这三种Memory不同的适用场景：
 
-1. 当FPGAPlatform为false时，代表只需要仿真即可，此时会生成RAMHelper模块，这是一个用DPI-C导入的一个C程序，其本质就是C++中的一个数组，根据接口信号读取和写入对应位置的元素。之所以在仿真时要使用C++来仿真ram，是因为我们需要在整个LC3系统运行起来之前，给ram中初始化一些我们需要的程序，比如说一些trap程序，启动程序。虽然这个直接用verilog来编写也可以做到，但是还是用C++来实现更加灵活简单。
+1. 当FPGAPlatform为false时，代表只需要仿真即可，此时会生成RAMHelper模块，这是一个用DPI-C导入的一个C程序，其本质就是C++中的一个数组，根据接口信号读取和写入对应位置的元素。之所以在仿真时要使用C++来仿真ram，是因为需要在整个LC3系统运行起来之前，给ram中初始化一些需要的程序，比如说一些trap程序，启动程序。虽然这个直接用verilog来编写也可以做到，但是还是用C++来实现更加灵活简单。
 2. 当FPGAPlatform为true时，代表你不需要用于仿真，而是要用于其他的功能，首先当REPLACE_MEM为false时，会生成lut_mem模块，这就是一个用verolog写的最简单的ram，没有ram初始化功能，这样生成的verilog其实是不能正常运行的，虽然它的电路都有，但是因为ram中没有程序，所以电路的行为不确定，这种配置主要是用于给后端做一些布局布线时使用，因为如果像在FPGA上运行的verilog使用了第三方ram的ip，会导致综合出来的ram是空的。
-3. 当FPGAPlatform为true且REPLACE_MEM为true时，代表你需要将生成的verilog代码烧录到FPGA上运行。此时会生成一个dual_mem模块，可以看到这是个空模块，内部没有任何的逻辑。其实这个模块是一个FPGA上的第三方ip核，接下来我们会在vivado中引入这个ip核，这样在FPGA综合时，就会使用FPGA上的ram资源，而不是直接使用lut搭建一个ram，直接使用lut搭建ram，我们的FPGA板卡上的lut资源是不够的。**在本实验中应该使用第3种配置**。
+3. 当FPGAPlatform为true且REPLACE_MEM为true时，代表你需要将生成的verilog代码烧录到FPGA上运行。此时会生成一个dual_mem模块，可以看到这是个空模块，内部没有任何的逻辑。其实这个模块是一个FPGA上的第三方ip核，接下来会在vivado中引入这个ip核，这样在FPGA综合时，就会使用FPGA上的ram资源，而不是直接使用lut搭建一个ram，直接使用lut搭建ram，FPGA板卡上的lut资源是不够的。**在本实验中应该使用第3种配置**。
 
 配置完之后就可以使用make verilog命令生成需要在FPGA上运行的verilog文件了。
 
@@ -164,7 +164,7 @@ LC3-FPGA上板运行
 
     fig6-15: ip核生成完成
 
-编译完成后在Sources窗口下点击切换到IP Sources标签页，可以看到生产的ram，点开dual_mem_stub.v可以看到，我们之前chisel中定义的dual_men接口与生成的ram接口是一致的，与此同时，在Hierachy标签页中，dual_mem的图标已经改变了
+编译完成后在Sources窗口下点击切换到IP Sources标签页，可以看到生产的ram，点开dual_mem_stub.v可以看到，之前chisel中定义的dual_men接口与生成的ram接口是一致的，与此同时，在Hierachy标签页中，dual_mem的图标已经改变了
 
 .. figure:: _static/image031.png
     :alt: controller
@@ -180,7 +180,7 @@ LC3-FPGA上板运行
 
     fig6-17: 生成对应模块后的dual_mem
 
-接下来我们要为vivado项目添加一个约束文件，这一步与添加Source文件类似，只是由选择Add or create design sources变为了Add or create constraints，这个文件主要是用来将LC3的时钟、复位接口和Uart接口与FPGA上对应的引脚连接，注意这里我们并没有将reset按钮映射到FPGA的reset按钮上，而是映射到了KEY0按钮上。因为如果映射到reset按钮上，只有reset按钮一直处于按下的状态，系统才会正常工作。后半部分的功能主要是为了生成的bit流文件转换成固化文件后能够适用于4bit位宽SPI通信的flash器件，代码如下：
+接下来要为vivado项目添加一个约束文件，这一步与添加Source文件类似，只是由选择Add or create design sources变为了Add or create constraints，这个文件主要是用来将LC3的时钟、复位接口和Uart接口与FPGA上对应的引脚连接，注意这里并没有将reset按钮映射到FPGA的reset按钮上，而是映射到了KEY0按钮上。因为如果映射到reset按钮上，只有reset按钮一直处于按下的状态，系统才会正常工作。后半部分的功能主要是为了生成的bit流文件转换成固化文件后能够适用于4bit位宽SPI通信的flash器件，代码如下：
 
 .. hint::
     如果需要修改对应的按键，可以参考附件中的FPGA开发板IO引脚分配表，其中给出了FPGA板上所有按键对应的编号
@@ -214,8 +214,8 @@ LC3-FPGA上板运行
 
     fig6-19: 添加约束文件2
 
-接下来我们要再在vivado中指定一个顶层，将我们的Top模块再包一层，这个顶层文件只在vivado做仿真时会使用，并不会真正被烧录到FPGA中。
-和之前添加TopMain.v一样，只不过这次我们选择Add or create simulation sources选项
+接下来要再在vivado中指定一个顶层，将的Top模块再包一层，这个顶层文件只在vivado做仿真时会使用，并不会真正被烧录到FPGA中。
+和之前添加TopMain.v一样，只不过这次选择Add or create simulation sources选项
 
 .. figure:: _static/image039.png
     :alt: controller
@@ -254,7 +254,7 @@ LC3-FPGA上板运行
     
     endmodule
 
-然后我们在Sources窗口中大概能看到这样的组织结构
+然后在Sources窗口中大概能看到这样的组织结构
 
 .. figure:: _static/image041.png
     :alt: controller
@@ -301,9 +301,9 @@ LC3-FPGA上板运行
 
     fig6-25: mcf文件生成成功提示窗口
 
-接下来就要正式开始烧录了，首先我们需要连接好开发板，首先我们需要连接JTAG下载接口，通过这个接口我们将我们的程序烧录到FPGA上自带的Flash中，这样在开机后FPGA就会从Flash中运行我们烧录好的程序。
+接下来就要正式开始烧录了，首先需要连接好开发板，先将FPGA板上的JTAG下载接口连接好，接口的具体位置可以参考FPGA开发指南第二章的2.1.1节图示，通过这个接口将我们的程序烧录到FPGA上自带的Flash中，这样在开机后FPGA就会从Flash中运行我们烧录好的程序。
 
-其次一个系统必须要有输入输出，因此我们还需要连接UART接口，同时在电脑上安装串口调试助手，来传输和接收我们的程序输入输出。
+其次一个系统必须要有输入输出，因此还需要连接UART接口，同时在电脑上安装串口调试助手，来传输和接收我们的程序输入输出。
 
 在连接完成后按下蓝色开关，给FPGA上电
 
@@ -341,7 +341,7 @@ LC3-FPGA上板运行
 
     fig6-29: 连接上FPGA后的视图
 
-接下来我们要在项目中为开发板添加一个固化Flash部件，选中芯片右键选择Add Configuration Memory Device   
+接下来要在项目中为开发板添加一个固化Flash部件，选中芯片右键选择Add Configuration Memory Device   
 
 
 .. figure:: _static/image059.png
@@ -367,7 +367,7 @@ LC3-FPGA上板运行
 
     fig6-32: Flash添加完成后弹出窗口，询问是否进行烧录
 
-接下来我们要选择刚才生成的mcf文件，还有和mcf文件在同一目录下的prm文件，按照下图配置完成后点击OK，就会开始烧录，烧录完成后会弹出窗口，此时在Hardware窗口中可以看到多出了一个Flash的图标
+接下来要选择刚才生成的mcf文件，还有和mcf文件在同一目录下的prm文件，按照下图配置完成后点击OK，就会开始烧录，烧录完成后会弹出窗口，此时在Hardware窗口中可以看到多出了一个Flash的图标
 
 .. figure:: _static/image065.png
     :alt: controller
@@ -390,7 +390,7 @@ LC3-FPGA上板运行
 
     fig6-35: Flash添加成功后视图
 
-接下来我们打开串口调试助手，在FPGA上电启动的情况下，我们选中FPGA对应的串口（不同的电脑可能对应的串口号不同，指导中的是COM4），然后配置好对应得波特率等参数，选择发送文件，然后将希望运行的程序的obj文件通过串口传输给FPGA，其中的LC3 启动程序会自动接收你想要运行的程序，将它存入RAM中，然后开始执行，下图是一个最简单的程序，它通过串口输出Hello!
+接下来打开串口调试助手，在FPGA上电启动的情况下，我们选中FPGA对应的串口（不同的电脑可能对应的串口号不同，指导中的是COM4），然后配置好对应得波特率等参数，选择发送文件，然后将希望运行的程序的obj文件通过串口传输给FPGA，其中的LC3 启动程序会自动接收你想要运行的程序，将它存入RAM中，然后开始执行，下图是一个最简单的程序，它通过串口输出Hello!
 
 
 .. figure:: _static/image071.png
@@ -398,7 +398,7 @@ LC3-FPGA上板运行
     :align: center
 
     fig6-36: Hello程序运行成功截图
-当然我们也可以运行一些带交互的程序，下图首先给FPGA传输一个计算机系统实验四里的MIN小游戏程序，然后在通过串口输入与LC3交互，实现游玩游戏的过程。
+当然也可以运行一些带交互的程序，下图首先给FPGA传输一个计算机系统实验四里的MIN小游戏程序，然后在通过串口输入与LC3交互，实现游玩游戏的过程。
 
 .. figure:: _static/image073.png
     :alt: controller

@@ -15,7 +15,7 @@
 实验任务
 --------
 
-- 使用Chisel重新实现我们在实验一中用verilog编写的3-8译码器
+- 使用Chisel重新实现在实验一中用verilog编写的3-8译码器
 - 编写build.sc文件，指定Scala和Chisel的版本
 - 编写Makefile文件，指定编译仿真的规则
 - 使用Chisel实现一个简单状态机，能够检测序列1101
@@ -25,11 +25,11 @@
 
 使用Chisel实现3-8译码器
 ***********************
-在上一节实验课中我们用verilog实现了一个3-8译码器，现在我们要用Chisel重新实现它。在编写代码前，首先需要学习Chisel语法相关的知识，Chisel是一个开源的硬件构造语言，是建构在Scala语言之上的领域专用语言（DSL），不同于verilog，Chisel中可以使用更高级的语言特性来描述电路，可以使用面向对象编程思想，通过简洁的代码实现复杂的电路功能。这里推荐通过 `Chisl Bootcamp <https://github.com/freechipsproject/chisel-bootcamp>`_ 学习，bootcamp给出了一个在线的 `练习系统 <https://mybinder.org/v2/gh/freechipsproject/chisel-bootcamp/master>`_，可以在上面按照教程直接编写Chisel代码，并查看运行结果。
+在上一节实验课中用verilog实现了一个3-8译码器，现在要用Chisel重新实现它。在编写代码前，首先需要学习Chisel语法相关的知识，Chisel是一个开源的硬件构造语言，是建构在Scala语言之上的领域专用语言（DSL），不同于verilog，Chisel中可以使用更高级的语言特性来描述电路，可以使用面向对象编程思想，通过简洁的代码实现复杂的电路功能。这里推荐通过 `Chisl Bootcamp <https://github.com/freechipsproject/chisel-bootcamp>`_ 学习，bootcamp给出了一个在线的 `练习系统 <https://mybinder.org/v2/gh/freechipsproject/chisel-bootcamp/master>`_，可以在上面按照教程直接编写Chisel代码，并查看运行结果。
 
 在学习了Chisel的基本语法后，就可以开始着手将实验一中的3-8译码器用Chisel重写了，
 
-首先在decoder目录下再新建一个decoder/src目录，这是由mill的项目格式规定的，我们将Chisel的代码放在这个目录下。由于这个译码电路实在是过于简单，因此你可能看不出Chisel相比于verilog有什么优势，但是随着你设计的电路越来越复杂，你会发现Chisel能极大的提高你的效率。
+首先在decoder目录下再新建一个decoder/src目录，这是由mill的项目格式规定的将Chisel的代码放在这个目录下。由于这个译码电路实在是过于简单，因此你可能看不出Chisel相比于verilog有什么优势，但是随着你设计的电路越来越复杂，你会发现Chisel能极大的提高你的效率。
 
 首先在decoder/src目录下新建一个main.scala文件，参考代码如下，和实验一一样，给出了基本的模块定义，其中的具体实现代码需要补全。
 
@@ -64,9 +64,9 @@
         )
     }
 
-在main.scala中，首先定义了Decoder这个类，继承了RawModule这个基类，在大部分电路设计时，我们更多继承的是Module这个类，Module类与RawModule类的区别在于，Module类虽然没有显示的定义，但是会隐式地包含clock和reset这两个接口，一个用于从外部接入时钟，一个用于从外部接受模块的reset信号。而RawModule则没有这两个隐式的接口，考虑到3-8译码器并不需要时钟和reset，因此这里继承RawModule即可。更多关于Chisel的API
+在main.scala中，首先定义了Decoder这个类，继承了RawModule这个基类，在大部分电路设计时，更多继承的是Module这个类，Module类与RawModule类的区别在于，Module类虽然没有显示的定义，但是会隐式地包含clock和reset这两个接口，一个用于从外部接入时钟，一个用于从外部接受模块的reset信号。而RawModule则没有这两个隐式的接口，考虑到3-8译码器并不需要时钟和reset，因此这里继承RawModule即可。更多关于Chisel的API
 
-之后定义了一个单例对象testMain，继承App类，这是Chisel例化顶层模块的基本形式，在其中我们例化生成了一个Decoder。
+之后定义了一个单例对象testMain，继承App类，这是Chisel例化顶层模块的基本形式，在其中例化生成了一个Decoder。
 
 .. hint:: 
     在编程或者阅读代码时遇到没有见过的方法或类型，可以参考 `Chisl API <https://www.chisel-lang.org/api/latest/index.html>`_ 和 `Scala API <https://www.scala-lang.org/api/current/scala/index.html>`_
@@ -74,7 +74,7 @@
 编写build.sc文件
 ****************
 
-我们在decoder目录下新建一个build.sc文件，写入如下代码
+在decoder目录下新建一个build.sc文件，写入如下代码
 
 .. code-block:: scala
 
@@ -125,11 +125,11 @@
 ****************
 
 如果你在之前的实验中编写的代码出现了一些错误，导致你每次都要重复的输入这些命令，那么你应该已经开始厌烦了，
-因此我们需要编写一个Makefile，通过make命令来自动管理这些代码和命令，这样我们在之后的开发过程中就能省下大量的精力。
+因此需要编写一个Makefile，通过make命令来自动管理这些代码和命令，这样在之后的开发过程中就能省下大量的精力。
 
-Makefile是在Linux环境下的一个工程管理文件。当你使用make命令去编译一个项目时，make命令会首先到这个项目的根目录下去寻找Makefile文件，然后才能根据这个文件去编译程序，可以将其理解成一个脚本，将我们之前手动编译Chisel，verilog和运行的命令打包起来，这样我们只要执行make命令，就能够按顺序执行这些指令。 `这里 <https://www.coonote.com/linux-note/makefile-simple-tutorial.html>`_ 是一个简单的Makefile教程， 当然如果遇到没有见过的命令，最好还是直接查找Makefile的 `官方手册 <https://www.gnu.org/software/make/manual/make.html>`_。
+Makefile是在Linux环境下的一个工程管理文件。当你使用make命令去编译一个项目时，make命令会首先到这个项目的根目录下去寻找Makefile文件，然后才能根据这个文件去编译程序，可以将其理解成一个脚本，将之前手动编译Chisel，verilog和运行的命令打包起来，这样只要执行make命令，就能够按顺序执行这些指令。 `这里 <https://www.coonote.com/linux-note/makefile-simple-tutorial.html>`_ 是一个简单的Makefile教程， 当然如果遇到没有见过的命令，最好还是直接查找Makefile的 `官方手册 <https://www.gnu.org/software/make/manual/make.html>`_。
 
-首先我们在decoder目录下新建一个Makefile文件，内容如下：
+首先在decoder目录下新建一个Makefile文件，内容如下：
 
 .. code-block:: shell
 
@@ -141,7 +141,7 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
 
     .DEFAULT_GOAL = verilog # 规定了默认的编译目标，例如这里，运行make，等同于运行 make verilog命令
 
-    $(TOP_V): $(SCALA_FILE) # 这里我们找到所有的Chisel源文件，然后用mill将Chisel代码编译为verilog文件
+    $(TOP_V): $(SCALA_FILE) # 这里找到所有的Chisel源文件，然后用mill将Chisel代码编译为verilog文件
     	@mkdir -p $(@D)
     	mill decoder.run decoder.main.testMain -td $(@D) --output-file $(@F)
 
@@ -168,7 +168,7 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
     clean: # 用于删除build中所有生成的文件
     	rm -rf build
 
-每部分代码都有相关功能的注释，总体来说，在这个Makefile文件中，我们定义了三个主要的target，分别是verilog，emu和clean，其中clean就是一条rm指令，把编译生成的build文件夹删掉，而verilog指令会将Chisel文件编译成verilog，make emu与make verilog的区别在于它不光会将Chisel文件编译成verilog代码，还会将verilog代码转换成仿真使用的C++代码，并将最终的可执行文件存放在build目录下。另外，记得确认上一节课的sim_main.cpp在当前的decoder目录下。总之，如果之前的操作都正确的话，现在你可以直接运行make emu来一键生成仿真程序了，此时你完整的项目目录应该如下图所示：
+每部分代码都有相关功能的注释，总体来说，在这个Makefile文件中，定义了三个主要的target，分别是verilog，emu和clean，其中clean就是一条rm指令，把编译生成的build文件夹删掉，而verilog指令会将Chisel文件编译成verilog，make emu与make verilog的区别在于它不光会将Chisel文件编译成verilog代码，还会将verilog代码转换成仿真使用的C++代码，并将最终的可执行文件存放在build目录下。另外，记得确认上一节课的sim_main.cpp在当前的decoder目录下。总之，如果之前的操作都正确的话，现在你可以直接运行make emu来一键生成仿真程序了，此时你完整的项目目录应该如下图所示：
 
 .. figure:: _static/dirtree.png
     :alt: dirtree
@@ -195,7 +195,7 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
 
     fig2-3: 状态转移图
 
-接下来新建一个Chisel项目，也可以将之前decoder目录直接复制一遍，记得将相关的目录名，Makefile里编译命令的路径修改为序列检测的名称，例如改为detection
+接下来新建一个Chisel项目，也可以将之前decoder目录直接复制一遍，但是推荐自己从头开始完整的走一遍新建项目的流程，这过程中能对这个项目结构有更深的了解
 
 .. hint:: 
     Makfile中VCerilator的编译命令可以尝试去掉其中的-Wall参数，看看有什么不同，查阅手册看看这个参数是什么作用
@@ -227,8 +227,8 @@ Makefile是在Linux环境下的一个工程管理文件。当你使用make命令
         Driver.execute(args, () => new Detection)
     }
 
-Chisel代码完成后，还需要修改sim_main.cpp顶层文件，在测试3-8译码器时，我们在主循环中每次迭代修改传送给decoder的输入，并读出decoder的输出端口的值。
-而在编写时序逻辑时，我们首先需要在顶层实现一个时钟信号。也就是定义一个变量，隔一段时间对它进行一次翻转。另外我们在顶层函数中定义想要给fetection输入的序列seq，并且每周期将其中的元素递增送往detection模块。sim_main.cpp的顶层框架代码如下：
+Chisel代码完成后，还需要修改sim_main.cpp顶层文件，在测试3-8译码器时，在主循环中每次迭代修改传送给decoder的输入，并读出decoder的输出端口的值。
+而在编写时序逻辑时，首先需要在顶层实现一个时钟信号。也就是定义一个变量，隔一段时间对它进行一次翻转。另外在顶层函数中定义想要给fetection输入的序列seq，并且每周期将其中的元素递增送往detection模块。sim_main.cpp的顶层框架代码如下：
 
 .. code-block:: scala
 
@@ -272,7 +272,7 @@ Chisel代码完成后，还需要修改sim_main.cpp顶层文件，在测试3-8�
     }
 
 .. hint:: 
-    这次我们将用于调试的printf函数改为了使用Chisel中的printf函数，而没有选择在sim_main.cpp里输出，为什么要这样，如果改成在sim_main.cpp中输出会有什么效果？
+    这次将用于调试的printf函数改为了使用Chisel中的printf函数，而没有选择在sim_main.cpp里输出，为什么要这样，如果改成在sim_main.cpp中输出会有什么效果？
 
 如果实现无误，最终运行应该能够看到类似的输出：
 
